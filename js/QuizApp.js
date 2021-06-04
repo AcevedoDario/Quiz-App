@@ -40,9 +40,16 @@ let questions = [
 //Creacion de variables
 const lastQuestion = questions.length - 1;
 let runningQuestion = 0;
+let count = 0;
+const questionTime = 10;
+const gaugeWidth = 150;
+const gaugeUnit = gaugeWidth / questionTime;
+let TIMER;
 
 //Renderizar pregunta
 function renderQuestion(){
+    let q = questions[runningQuestion];
+
     question.innerHTML = "<p>"+ q.question +"</p>";
     qImg.innerHTML = "<img src="+ q.imgSrc +">";
     choiceA.innerHTML = q.choiceA;
@@ -50,3 +57,33 @@ function renderQuestion(){
     choiceC.innerHTML = q.choiceC;
 }
 
+start.addEventListener("click", startQuiz);
+
+//start quiz
+function startQuiz(){
+    start.style.display = "none";
+    renderQuestion();
+    quiz.style.display = "block";
+    renderProgress();
+    renderCounter()
+    TIMER = setInterval(renderCounter,1000); //1 segundo entre los numeros del contador
+}
+
+
+//Renderisar progreso
+function renderProgress(){
+    for(let qIndex = 0; qIndex <= lastQuestion; qIndex++ ){
+        progress.innerHTML += "<div class='prog' id="+ qIndex +"</div>";
+    }
+}
+
+//Renderizar contador
+function renderCounter(){
+    if(count <= questionTime){
+        counter.innerHTML = count;
+        timeGauge.style.width = count * gaugeUnit +"px";
+        count++
+    }else{
+        count = 0
+    }
+}
