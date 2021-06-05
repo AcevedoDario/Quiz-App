@@ -1,4 +1,4 @@
-//Seleccion de elementos
+// select all elements
 const start = document.getElementById("start");
 const quiz = document.getElementById("quiz");
 const question = document.getElementById("question");
@@ -11,46 +11,46 @@ const timeGauge = document.getElementById("timeGauge");
 const progress = document.getElementById("progress");
 const scoreDiv = document.getElementById("scoreContainer");
 
-//crear preguntas
+// create our questions
 let questions = [
     {
-        question : "¿Cuántas horas hay en un año bisiesto?",
-        imgSrc : "../img/q1.png",
-        choiceA : "8760 Hs.",
-        choiceB : "8736 Hs.",
-        choiceC : "8764 Hs.",
+        question : "What does HTML stand for?",
+        imgSrc : "img/html.png",
+        choiceA : "Correct",
+        choiceB : "Wrong",
+        choiceC : "Wrong",
+        correct : "A"
+    },{
+        question : "What does CSS stand for?",
+        imgSrc : "img/css.png",
+        choiceA : "Wrong",
+        choiceB : "Correct",
+        choiceC : "Wrong",
+        correct : "B"
+    },{
+        question : "What does JS stand for?",
+        imgSrc : "img/js.png",
+        choiceA : "Wrong",
+        choiceB : "Wrong",
+        choiceC : "Correct",
         correct : "C"
-    },{
-        question : "¿En qué provincia de Argentina se encuentra el Aconcagua?",
-        imgSrc : "../img/q2.png",
-        choiceA : "San Juan",
-        choiceB : "Mendoza",
-        choiceC : "Neuquen",
-        correct : "B"
-    },{
-        question : "¿Que avenida es la mas larga?",
-        imgSrc : "../img/q3.png",
-        choiceA : "Av. 9 de Julio",
-        choiceB : "Av. Rivadavia",
-        choiceC : "Av. H. Irigoyen",
-        correct : "B"
     }
 ];
 
-//Creacion de variables
+// create some variables
 const lastQuestion = questions.length - 1;
 let runningQuestion = 0;
 let count = 0;
-const questionTime = 10;
-const gaugeWidth = 150;
+const questionTime = 10; // 10s
+const gaugeWidth = 150; // 150px
 const gaugeUnit = gaugeWidth / questionTime;
 let TIMER;
 let score = 0;
 
-//Renderizar pregunta
+// render a question
 function renderQuestion(){
     let q = questions[runningQuestion];
-
+    
     question.innerHTML = "<p>"+ q.question +"</p>";
     qImg.innerHTML = "<img src="+ q.imgSrc +">";
     choiceA.innerHTML = q.choiceA;
@@ -60,44 +60,46 @@ function renderQuestion(){
 
 start.addEventListener("click",startQuiz);
 
-//start quiz
+// start quiz
 function startQuiz(){
     start.style.display = "none";
     renderQuestion();
     quiz.style.display = "block";
     renderProgress();
     renderCounter();
-    TIMER = setInterval(renderCounter,1000); //1 segundo entre los numeros del contador
+    TIMER = setInterval(renderCounter,1000); // 1000ms = 1s
 }
 
-//Renderisar progreso
+// render progress
 function renderProgress(){
-    for(let qIndex = 0; qIndex <= lastQuestion; qIndex++ ){
+    for(let qIndex = 0; qIndex <= lastQuestion; qIndex++){
         progress.innerHTML += "<div class='prog' id="+ qIndex +"></div>";
     }
 }
 
-//Renderizar contador
+// counter render
+
 function renderCounter(){
     if(count <= questionTime){
         counter.innerHTML = count;
-        timeGauge.style.width = count * gaugeUnit +"px";
+        timeGauge.style.width = count * gaugeUnit + "px";
         count++
     }else{
-        count = 0
+        count = 0;
+        // change progress color to red
         answerIsWrong();
         if(runningQuestion < lastQuestion){
             runningQuestion++;
             renderQuestion();
         }else{
-            //terminar el quiz
+            // end the quiz and show the score
             clearInterval(TIMER);
-            renderScore();
+            scoreRender();
         }
     }
 }
 
-//Check de respuestas
+// checkAnwer
 function checkAnswer(answer){
     if(answer == questions[runningQuestion].correct){
         // answer is correct
@@ -114,12 +116,11 @@ function checkAnswer(answer){
         runningQuestion++;
         renderQuestion();
     }else{
-        //terminar y mostrar puntaje
+        // end the quiz and show the score
         clearInterval(TIMER);
         scoreRender();
     }
 }
-
 // answer is correct
 function answerIsCorrect(){
     document.getElementById(runningQuestion).style.backgroundColor = "#0f0";
@@ -130,20 +131,41 @@ function answerIsWrong(){
     document.getElementById(runningQuestion).style.backgroundColor = "#f00";
 }
 
-//Renderizar score
+// score render
 function scoreRender(){
     scoreDiv.style.display = "block";
-
-    //calcular porcentaje de aciertos
-    const scorePerCent = Math.round(100 * score/questions.length);
-
-    //elegir imagen a mostrar segun el puntaje obtenido
-    let img = (scorePerCent >= 80) ? "../img/5.png" :
-              (scorePerCent >= 60) ? "../img/4.png"  :
-              (scorePerCent >= 40) ? "../img/3.png"      :
-              (scorePerCent >= 20) ? "../img/2.png"       :
-              "../img/1.png";
     
-    scoreDiv.innerHTML = "<img src ="+ img +">";
-    scoreDiv.innerHTML += "<p>"+ scorePerCent +"</p>";
+    // calculate the amount of question percent answered by the user
+    const scorePerCent = Math.round(100 * score/questions.length);
+    
+    // choose the image based on the scorePerCent
+    let img = (scorePerCent >= 80) ? "img/5.png" :
+              (scorePerCent >= 60) ? "img/4.png" :
+              (scorePerCent >= 40) ? "img/3.png" :
+              (scorePerCent >= 20) ? "img/2.png" :
+              "img/1.png";
+    
+    scoreDiv.innerHTML = "<img src="+ img +">";
+    scoreDiv.innerHTML += "<p>"+ scorePerCent +"%</p>";
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
